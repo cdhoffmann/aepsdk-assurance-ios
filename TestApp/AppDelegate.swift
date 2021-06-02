@@ -43,9 +43,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                           Places.self
         ]
         MobileCore.registerExtensions(extensions, {
-            MobileCore.configureWith(appId: "launch-EN459260fc579a4dcbb2d1743947e65f09-development")
+            MobileCore.configureWith(appId: "94f571f308d5/e30a9514788b/launch-44fec1a705f1-development")
         })
-        Assurance.startSession(url: NSURL(string: "beta://?adb_validation_sessionid=365f9dac-70b6-494e-97ae-bc819845cb9a")!)
+        Assurance.startSession(url: NSURL(string: "places://?adb_validation_sessionid=7cec9d7d-4110-4018-9de4-f3970154fc73")!)
 
         return true
     }

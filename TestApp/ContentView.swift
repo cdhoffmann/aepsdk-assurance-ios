@@ -97,7 +97,7 @@ struct ContentView: View {
 
             HStack {
                 Button(action: {
-                    let location = CLLocation(latitude: 40.4350229, longitude: -111.8918356)
+                    let location = CLLocation(latitude: 37.335480, longitude: -121.893028)
                     Places.getNearbyPointsOfInterest(forLocation: location, withLimit: 10) { (nearbyPois, responseCode) in
                         print("responseCode: \(responseCode.rawValue) \nnearbyPois: \(nearbyPois)")
                     }
@@ -106,13 +106,15 @@ struct ContentView: View {
                 }).buttonStyle(RoundedRectangleButtonStyle())
 
                 Button(action: {
-
+                    let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: 37.3255196, longitude: -121.9458237), radius: 100, identifier: "dfb81b5a-1027-431a-917d-41292916d575")
+                    Places.processRegionEvent(PlacesRegionEvent.entry, forRegion: region)
                 }, label: {
                     Text("Entry")
                 }).buttonStyle(RoundedRectangleButtonStyle())
 
                 Button(action: {
-
+                    let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: 37.3255196, longitude: -121.9458237), radius: 100, identifier: "dfb81b5a-1027-431a-917d-41292916d575")
+                    Places.processRegionEvent(PlacesRegionEvent.exit, forRegion: region)
                 }, label: {
                     Text("Exit")
                 }).buttonStyle(RoundedRectangleButtonStyle())

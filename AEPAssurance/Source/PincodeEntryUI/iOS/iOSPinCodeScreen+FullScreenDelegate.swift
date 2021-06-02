@@ -20,6 +20,7 @@ extension iOSPinCodeScreen: FullscreenMessageDelegate {
     /// - Parameters:
     ///     - message: Fullscreen message which is currently shown
     func onShow(message: FullscreenMessage) {
+        isDisplayed = true
         fullscreenWebView = message.webView as? WKWebView
     }
 
@@ -27,12 +28,13 @@ extension iOSPinCodeScreen: FullscreenMessageDelegate {
     /// - Parameters:
     ///     - message: Fullscreen message which is dismissed
     func onDismiss(message: FullscreenMessage) {
+        isDisplayed = false
         fullscreenWebView = nil
         fullscreenMessage = nil
     }
 
     /// Thread: main thread
-    /// 
+    ///
     /// Invoked when the fullscreen message is attempting to load a url
     /// - Parameters:
     ///     - message: Fullscreen message

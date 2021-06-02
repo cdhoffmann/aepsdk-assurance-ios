@@ -124,10 +124,14 @@ public class Assurance: NSObject, Extension {
 
         // Read the environment query parameter from the deeplink url
         let environmentString = deeplinkURL?.params[AssuranceConstants.Deeplink.ENVIRONMENT_KEY] ?? ""
+        
+        // invalidate the timer
+        invalidateTimer()
 
         // save the environment and sessionID
         environment = AssuranceEnvironment.init(envString: environmentString)
         self.sessionId = sessionId
+        shareState()
         assuranceSession?.startSession()
     }
 

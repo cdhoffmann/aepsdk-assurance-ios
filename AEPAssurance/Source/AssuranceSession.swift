@@ -47,6 +47,8 @@ class AssuranceSession {
     /// Initializer with instance of  `Assurance` extension
     init(_ assuranceExtension: Assurance) {
         self.assuranceExtension = assuranceExtension
+        handleInBoundEvents()
+        handleOutBoundEvents()
     }
 
     /// Called when a valid assurance deeplink url is received from the startSession API
@@ -65,10 +67,11 @@ class AssuranceSession {
         let pinCodeScreen = iOSPinCodeScreen.init(withExtension: assuranceExtension)
         self.pinCodeScreen = pinCodeScreen
 
-        pinCodeScreen.getSocketURL(callback: { socketUrl in
+        pinCodeScreen.getSocketURL(callback: { [weak self]  socketUrl, error in
             // Thread : main thread (this callback is called from `overrideUrlLoad` method of WKWebView)
             Log.debug(label: AssuranceConstants.LOG_TAG, "Attempting to make a socket connection with URL : \(socketUrl)")
-            self.assuranceExtension.socketURL = socketUrl.absoluteString
+            self?.assuranceExtension.socketURL = socketUrl.absoluteString
+            self?.socket.connect(withUrl: socketUrl)
             pinCodeScreen.connectionInitialized()
         })
 
@@ -87,13 +90,20 @@ class AssuranceSession {
     
     func terminateSession() {
         socket.disconnect()
-        assuranceExtension.socketURL = nil
-        assuranceExtension.environment = AssuranceConstants.DEFAULT_ENVIRONMENT
+        clearSessionData()
         assuranceExtension.clearState()
     }
     
     func addClientLog(_ message: String, visibility: AssuranceClientLogVisibility) {
         statusUI.addClientLog(message, visibility: visibility)
+    }
+    
+    func clearSessionData() {
+        canStartForwarding = false
+        assuranceExtension.sessionId = nil
+        assuranceExtension.socketURL = nil
+        assuranceExtension.environment = AssuranceConstants.DEFAULT_ENVIRONMENT
+        pinCodeScreen = nil
     }
     
     

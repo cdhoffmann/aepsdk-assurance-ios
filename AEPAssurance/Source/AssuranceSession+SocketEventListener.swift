@@ -131,6 +131,19 @@ extension AssuranceSession: SocketEventListener {
     }
 
     private func displaySocketErrorMessage(error: AssuranceSocketError, closeCode: Int) {
-
+        // if the pinCode screen is still being displayed. Then use the same webView to display error
+        if (pinCodeScreen?.isDisplayed == true) {
+            pinCodeScreen?.connectionFailedWithError(error, shouldShowRetry: false)
+        } else {
+            let errorView = ErrorView.init(AssuranceSocketError.CLIENT_ERROR)
+            errorView.display()
+        }
+        
+        statusUI.remove()
+        clearSessionData()
+        
+        // since we don't give retry option for these errors and UI will be dismissed anyway, hence notify plugins for onSessionTerminated
+        pluginHub.notifyPluginsOnDisconnect(withCloseCode: closeCode)
+        pluginHub.notifyPluginsOnSessionTerminated()
     }
 }

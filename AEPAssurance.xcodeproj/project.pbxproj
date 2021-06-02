@@ -76,6 +76,7 @@
 		B6FA605326676CD300B77AF4 /* iOSStatusUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FA605226676CD300B77AF4 /* iOSStatusUI.swift */; };
 		B6FA605626676D2700B77AF4 /* iOSStatusUI+FloatingButtonDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FA605526676D2700B77AF4 /* iOSStatusUI+FloatingButtonDelegate.swift */; };
 		B6FA605826676D3F00B77AF4 /* iOSStatusUI+FullScreenDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FA605726676D3F00B77AF4 /* iOSStatusUI+FullScreenDelegate.swift */; };
+		B6FA605B2667863F00B77AF4 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FA605A2667863F00B77AF4 /* ErrorView.swift */; };
 		B6FEB8AC263A18E600F0F240 /* SocketScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FEB8AB263A18E600F0F240 /* SocketScript.swift */; };
 		B6FEB8B1263A18F500F0F240 /* InactiveIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FEB8AF263A18F500F0F240 /* InactiveIcon.swift */; };
 		B6FEB8B2263A18F500F0F240 /* ActiveIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FEB8B0263A18F500F0F240 /* ActiveIcon.swift */; };
@@ -198,6 +199,7 @@
 		B6FA605226676CD300B77AF4 /* iOSStatusUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSStatusUI.swift; sourceTree = "<group>"; };
 		B6FA605526676D2700B77AF4 /* iOSStatusUI+FloatingButtonDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "iOSStatusUI+FloatingButtonDelegate.swift"; sourceTree = "<group>"; };
 		B6FA605726676D3F00B77AF4 /* iOSStatusUI+FullScreenDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "iOSStatusUI+FullScreenDelegate.swift"; sourceTree = "<group>"; };
+		B6FA605A2667863F00B77AF4 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		B6FEB8AB263A18E600F0F240 /* SocketScript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketScript.swift; sourceTree = "<group>"; };
 		B6FEB8AF263A18F500F0F240 /* InactiveIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InactiveIcon.swift; sourceTree = "<group>"; };
 		B6FEB8B0263A18F500F0F240 /* ActiveIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveIcon.swift; sourceTree = "<group>"; };
@@ -276,6 +278,7 @@
 		B640719B262C313E00C43183 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				B6FA60592667862A00B77AF4 /* ErrorUI */,
 				B6B0E2B6263A737600EF5E21 /* PincodeEntryUI */,
 				B6FA604E26676C7B00B77AF4 /* StatusUI */,
 				B6D6A0302660EC93005042BE /* Socket */,
@@ -510,6 +513,14 @@
 				B6FA605726676D3F00B77AF4 /* iOSStatusUI+FullScreenDelegate.swift */,
 			);
 			path = iOS;
+			sourceTree = "<group>";
+		};
+		B6FA60592667862A00B77AF4 /* ErrorUI */ = {
+			isa = PBXGroup;
+			children = (
+				B6FA605A2667863F00B77AF4 /* ErrorView.swift */,
+			);
+			path = ErrorUI;
 			sourceTree = "<group>";
 		};
 		B6FEB88A263A0F0700F0F240 /* Icons */ = {
@@ -866,6 +877,7 @@
 			files = (
 				B6D6A03F2660ED4D005042BE /* WebViewSocket.swift in Sources */,
 				B64071D3262C368C00C43183 /* Assurance.swift in Sources */,
+				B6FA605B2667863F00B77AF4 /* ErrorView.swift in Sources */,
 				B6D6A02F2660CFF5005042BE /* Event+Assurance.swift in Sources */,
 				B6B23ACE26414C8100EE8153 /* iOSPinCodeScreen+FullScreenDelegate.swift in Sources */,
 				B64071D7262C376A00C43183 /* AssuranceConstants.swift in Sources */,
