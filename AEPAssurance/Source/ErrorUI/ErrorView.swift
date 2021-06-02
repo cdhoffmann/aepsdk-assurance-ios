@@ -11,10 +11,51 @@
  */
 
 import Foundation
+import AEPServices
+import WebKit
 
 class ErrorView : FullscreenMessageDelegate {
-    func displayError(_ error: AssuranceSocketError, shouldShowRetry: Bool) {
-        
-    }
-}
+    var error: AssuranceSocketError
+    var fullscreenMessage: FullscreenPresentable?
+    var fullscreenWebView: WKWebView?
 
+    init(_ error: AssuranceSocketError) {
+        self.error = error
+    }
+    
+    func display() {
+        fullscreenMessage = ServiceProvider.shared.uiService.createFullscreenMessage(payload: String(bytes: PinDialogHTML.content, encoding: .utf8)!, listener: self, isLocalImageUsed: false)
+        fullscreenMessage?.show()
+    }
+    
+    func onShow(message: FullscreenMessage) {
+        fullscreenWebView = message.webView as? WKWebView
+        loadError() // to do fix this
+    }
+    
+    func onDismiss(message: FullscreenMessage) {
+        fullscreenWebView = nil
+        fullscreenMessage = nil
+    }
+    
+    func overrideUrlLoad(message: FullscreenMessage, url: String?) -> Bool {
+        // no operation if we are unable to find the host of the url
+        // return true, so force core to handle the URL
+        guard let host = URL(string: url ?? "")?.host else {
+            return true
+        }
+        
+        return false
+    }
+    
+    func onShowFailure() {
+        Log.debug(label: AssuranceConstants.LOG_TAG, "Unable to display Assurance error screen. Assurance session terminated.")
+    }
+    
+    private func loadError() {
+        Log.debug(label: AssuranceConstants.LOG_TAG, String(format: "Assurance connection establishment failed. Error : %@, Description : %@", error.info.name, error.info.description))
+        let jsFunctionCall = String(format: "showError('%@','%@', %d);", error.info.name, error.info.description, false)
+        fullscreenWebView?.evaluateJavaScript(jsFunctionCall, completionHandler: nil)
+    }
+    
+}
