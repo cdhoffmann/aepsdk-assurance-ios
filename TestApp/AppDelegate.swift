@@ -10,9 +10,18 @@
  governing permissions and limitations under the License.
  */
 
+import AEPAnalytics
 import AEPAssurance
 import AEPCore
-import UIKit
+import AEPEdge
+import AEPEdgeConsent
+import AEPEdgeIdentity
+import AEPIdentity
+import AEPLifecycle
+import AEPSignal
+import AEPTarget
+import AEPUserProfile
+import AEPPlaces
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,9 +29,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         MobileCore.setLogLevel(.trace)
-        MobileCore.registerExtensions([Assurance.self], {
-            MobileCore.configureWith(appId: "")
+        let extensions = [AEPIdentity.Identity.self,
+                          Lifecycle.self,
+                          Signal.self,
+                          Edge.self,
+                          Consent.self,
+                          Analytics.self,
+                          AEPEdgeIdentity.Identity.self,
+                          Target.self,
+                          Consent.self,
+                          UserProfile.self,
+                          Assurance.self,
+                          Places.self
+        ]
+        MobileCore.registerExtensions(extensions, {
+            MobileCore.configureWith(appId: "launch-EN459260fc579a4dcbb2d1743947e65f09-development")
         })
+        Assurance.startSession(url: NSURL(string: "beta://?adb_validation_sessionid=365f9dac-70b6-494e-97ae-bc819845cb9a")!)
 
         return true
     }

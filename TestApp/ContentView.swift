@@ -11,12 +11,114 @@
  */
 
 import AEPAssurance
+import AEPCore
+import AEPUserProfile
 import SwiftUI
+import AEPPlaces
+import CoreLocation
 
 struct ContentView: View {
+
+    let timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
+
     var body: some View {
-        Text("Assurance Version: v" + Assurance.extensionVersion)
-            .padding()
+        VStack {
+            Text("Assurance Version: v" + Assurance.extensionVersion).padding()
+            HStack {
+                Text("Analytics").padding(.leading).font(.system(size: 25, weight: .heavy, design: .default))
+                Spacer()
+            }
+
+//                        Text("Hello, World!")
+//                            .onReceive(timer) { time in
+//                                MobileCore.track(state: "Fabulous action", data: nil)
+//                        }
+
+            HStack {
+                Button(action: {
+                    MobileCore.track(state: "Fabulous action", data: nil)
+                }, label: {
+                    Text("Track Action")
+                }).buttonStyle(RoundedRectangleButtonStyle()).padding()
+
+                Button(action: {
+                    MobileCore.track(state: "Amazing state", data: nil)
+                }, label: {
+                    Text("Track State")
+                }).buttonStyle(RoundedRectangleButtonStyle()).padding()
+            }
+
+            HStack {
+                Text("UserProfile").padding(.leading).font(.system(size: 25, weight: .heavy, design: .default))
+                Spacer()
+            }
+
+            HStack {
+                Button(action: {
+                    let userProfile: [String: Any] = [
+                        "type": "HardCore Gamer",
+                        "age": 16
+                    ]
+                    UserProfile.updateUserAttributes(attributeDict: userProfile)
+                }, label: {
+                    Text("Update")
+                }).buttonStyle(RoundedRectangleButtonStyle()).padding()
+
+                Button(action: {
+                    UserProfile.removeUserAttributes(attributeNames: ["type"])
+                }, label: {
+                    Text("Remove ")
+                }).buttonStyle(RoundedRectangleButtonStyle()).padding()
+            }
+
+            HStack {
+                Text("Consent").padding(.leading).font(.system(size: 25, weight: .heavy, design: .default))
+                Spacer()
+            }
+
+            HStack {
+                Button(action: {
+
+                }, label: {
+                    Text("Consent Yes")
+                }).buttonStyle(RoundedRectangleButtonStyle()).padding()
+
+                Button(action: {
+
+                }, label: {
+                    Text("Consent No")
+                }).buttonStyle(RoundedRectangleButtonStyle()).padding()
+            }
+
+            HStack {
+                Text("Places").padding(.leading).font(.system(size: 25, weight: .heavy, design: .default))
+                Spacer()
+            }
+
+            HStack {
+                Button(action: {
+                    let location = CLLocation(latitude: 40.4350229, longitude: -111.8918356)
+                    Places.getNearbyPointsOfInterest(forLocation: location, withLimit: 10) { (nearbyPois, responseCode) in
+                        print("responseCode: \(responseCode.rawValue) \nnearbyPois: \(nearbyPois)")
+                    }
+                }, label: {
+                    Text("Get POIs")
+                }).buttonStyle(RoundedRectangleButtonStyle())
+
+                Button(action: {
+
+                }, label: {
+                    Text("Entry")
+                }).buttonStyle(RoundedRectangleButtonStyle())
+
+                Button(action: {
+
+                }, label: {
+                    Text("Exit")
+                }).buttonStyle(RoundedRectangleButtonStyle())
+            }
+        }
+
     }
 }
 
@@ -25,3 +127,17 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
+struct RoundedRectangleButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack {
+            Spacer()
+            configuration.label.foregroundColor(.black)
+            Spacer()
+        }
+        .padding()
+        .background(Color.yellow.cornerRadius(8))
+        .scaleEffect(configuration.isPressed ? 0.95 : 1)
+    }
+}
+
