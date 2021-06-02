@@ -87,7 +87,7 @@ extension iOSPinCodeScreen: FullscreenMessageDelegate {
                 return false
             }
             self.connectionInitialized()
-            self.authorizedURLCallback?(url)
+            self.pinCodeCallback?(url, nil)
         }
 
         return false

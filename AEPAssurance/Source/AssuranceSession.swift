@@ -68,6 +68,16 @@ class AssuranceSession {
         self.pinCodeScreen = pinCodeScreen
 
         pinCodeScreen.getSocketURL(callback: { [weak self]  socketUrl, error in
+            if let error = error {
+                self?.handleConnectionError(error: error, closeCode: nil)
+                return
+            }
+            
+            guard let socketUrl = socketUrl else {
+                Log.debug(label: AssuranceConstants.LOG_TAG, "SocketURL to connect to session is empty. Ignoring to start Assurance session.")
+                return
+            }
+            
             // Thread : main thread (this callback is called from `overrideUrlLoad` method of WKWebView)
             Log.debug(label: AssuranceConstants.LOG_TAG, "Attempting to make a socket connection with URL : \(socketUrl)")
             self?.assuranceExtension.socketURL = socketUrl.absoluteString
@@ -148,6 +158,30 @@ class AssuranceSession {
         pluginHub.registerPlugin(PluginFakeEvent(), toSession: self)
         pluginHub.registerPlugin(PluginConfigModify(), toSession: self)
         pluginHub.registerPlugin(PluginScreenshot(), toSession: self)
+    }
+    
+    
+    
+    func handleConnectionError(error: AssuranceSocketError, closeCode: Int?) {
+        // if the pinCode screen is still being displayed. Then use the same webView to display error
+        if (pinCodeScreen?.isDisplayed == true) {
+            pinCodeScreen?.connectionFailedWithError(error, shouldShowRetry: false)
+        } else {
+            let errorView = ErrorView.init(AssuranceSocketError.CLIENT_ERROR)
+            errorView.display()
+        }
+        
+        statusUI.remove()
+        clearSessionData()
+        
+        
+        if let closeCode = closeCode {
+            pluginHub.notifyPluginsOnDisconnect(withCloseCode: closeCode)
+            // since we don't give retry option for these errors and UI will be dismissed anyway, hence notify plugins for onSessionTerminated
+            if !error.info.shouldRetry {
+                pluginHub.notifyPluginsOnSessionTerminated()
+            }
+        }
     }
 
 }

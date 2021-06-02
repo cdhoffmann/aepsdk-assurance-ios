@@ -61,7 +61,7 @@ extension AssuranceSession: SocketEventListener {
             // This is a non-retry error. Display the error back to user and close the connection.
         else if closeCode == AssuranceConstants.SocketCloseCode.ORG_MISMATCH {
             Log.debug(label: AssuranceConstants.LOG_TAG, "Socket disconnected with close code \(closeCode). OrgID Mismatch.")
-            displaySocketErrorMessage(error: AssuranceSocketError.ORGID_MISMATCH, closeCode: closeCode)
+            handleConnectionError(error: AssuranceSocketError.ORGID_MISMATCH, closeCode: closeCode)
         }
 
             // Close code 4901, happens when the number of connections per session exceeds the limit
@@ -69,7 +69,7 @@ extension AssuranceSession: SocketEventListener {
             // This is a non-retry error. Display the error back to user and close the connection.
         else if closeCode == AssuranceConstants.SocketCloseCode.CONNECTION_LIMIT {
             Log.debug(label: AssuranceConstants.LOG_TAG, "Socket disconnected with close code \(closeCode). Connection Limit reached (200 devices per session).")
-            displaySocketErrorMessage(error: AssuranceSocketError.CONNECTION_LIMIT, closeCode: closeCode)
+            handleConnectionError(error: AssuranceSocketError.CONNECTION_LIMIT, closeCode: closeCode)
         }
 
             // Close code 4902, happens when the clients exceeds the number of Griffon events that can be sent per minute
@@ -77,7 +77,7 @@ extension AssuranceSession: SocketEventListener {
             // This is a non-retry error. Display the error back to user and close the connection.
         else if closeCode == AssuranceConstants.SocketCloseCode.EVENTS_LIMIT {
             Log.debug(label: AssuranceConstants.LOG_TAG, "Socket disconnected with close code \(closeCode). Event Limit reached å(10k events per minute for a client).")
-            displaySocketErrorMessage(error: AssuranceSocketError.EVENT_LIMIT, closeCode: closeCode)
+            handleConnectionError(error: AssuranceSocketError.EVENT_LIMIT, closeCode: closeCode)
         }
 
             // Close code 4400, happens when there is a something wrong with the client during socket connection.
@@ -86,7 +86,7 @@ extension AssuranceSession: SocketEventListener {
             // If clientInfoEvent is not the first event to socket
             // If there are any missing parameters in the socket URL
         else if closeCode == AssuranceConstants.SocketCloseCode.CLIENT_ERROR {
-            displaySocketErrorMessage(error: AssuranceSocketError.CLIENT_ERROR, closeCode: closeCode)
+            handleConnectionError(error: AssuranceSocketError.CLIENT_ERROR, closeCode: closeCode)
         }
 
             // for all other abnormal closures, display error back to UI and attempt to reconnect
@@ -128,22 +128,5 @@ extension AssuranceSession: SocketEventListener {
 
     func webSocket(_ socket: SocketConnectable, didChangeState state: SocketState) {
         Log.debug(label: AssuranceConstants.LOG_TAG, "AssuranceSession: Socket state changed \(socket.socketState)")
-    }
-
-    private func displaySocketErrorMessage(error: AssuranceSocketError, closeCode: Int) {
-        // if the pinCode screen is still being displayed. Then use the same webView to display error
-        if (pinCodeScreen?.isDisplayed == true) {
-            pinCodeScreen?.connectionFailedWithError(error, shouldShowRetry: false)
-        } else {
-            let errorView = ErrorView.init(AssuranceSocketError.CLIENT_ERROR)
-            errorView.display()
-        }
-        
-        statusUI.remove()
-        clearSessionData()
-        
-        // since we don't give retry option for these errors and UI will be dismissed anyway, hence notify plugins for onSessionTerminated
-        pluginHub.notifyPluginsOnDisconnect(withCloseCode: closeCode)
-        pluginHub.notifyPluginsOnSessionTerminated()
     }
 }

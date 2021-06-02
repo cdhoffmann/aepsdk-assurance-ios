@@ -13,14 +13,16 @@
 import Foundation
 
 protocol SessionAuthorizable {
-    typealias authorizedURLCallback = (URL) -> Void
+    typealias PinCodeCallback = (URL?, AssuranceSocketError?) -> Void
+    /// property that indicated if the pinCode screen is currently displayed
+    var isDisplayed: Bool { get }
 
     init(withExtension: Assurance)
 
     /// Invoke this during start session to display the pinCode screen
     /// - Parameters
     ///    - callback : callback that will be invoked once the authorized websocket URL is obtained
-    mutating func getSocketURL(callback : @escaping authorizedURLCallback)
+    mutating func getSocketURL(callback : @escaping PinCodeCallback)
 
     /// Invoked when the a socket connection is initialized
     func connectionInitialized()
