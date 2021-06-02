@@ -147,6 +147,13 @@ public class Assurance: NSObject, Extension {
 
         let assuranceEvent = AssuranceEvent.from(mobileCoreEvent: event)
         assuranceSession?.sendEvent(assuranceEvent)
+        
+        
+        if event.isPlacesRequestEvent {
+            handlePlacesRequest(event: event)
+        } else if event.isPlacesResponseEvent {
+            handlePlacesResponse(event: event)
+        }
     }
 
     /// Method to process the sharedState events from the event hub.
@@ -223,7 +230,7 @@ public class Assurance: NSObject, Extension {
     // MARK: Places event handlers
     private func handlePlacesRequest(event : Event) {
         if event.isRequestNearByPOIEvent {
-            assuranceSession?.addClientLog("Places - Requesting %d nearby POIs from (%.6f, %.6f)", visibility: .normal)
+            assuranceSession?.addClientLog("Places - Requesting \(event.poiCount) nearby POIs from (\(event.latitude), \(event.longitude))", visibility: .normal)
         }
         else if event.isRequestResetEvent{
             assuranceSession?.addClientLog("Places - Resetting location", visibility: .normal)
@@ -231,6 +238,18 @@ public class Assurance: NSObject, Extension {
     }
     
     private func handlePlacesResponse(event : Event) {
-        
+        if event.isResponseRegionEvent {
+            assuranceSession?.addClientLog("Places - Processed \(event.regionEventType) for region \(event.regionName).", visibility: .normal)
+        }
+        else if event.isResponseNearByEvent {
+            let nearByPOIs = event.nearByPOIs
+            for poi in nearByPOIs {
+                guard let poiDictionary = poi as? Dictionary<String,Any> else {
+                    return
+                }
+                assuranceSession?.addClientLog("\t  \(poiDictionary["regionname"] as? String ?? "Unknown")", visibility: .high)
+            }
+            assuranceSession?.addClientLog("Places - Found \(nearByPOIs.count) nearby POIs \(nearByPOIs.count>0 ? ":" : ".")", visibility: .high)
+        }
     }
 }

@@ -61,31 +61,34 @@ class iOSStatusUI {
 
     func addClientLog(_ message: String, visibility: AssuranceClientLogVisibility) {
         clientLogQueue.enqueue(newElement: AssuranceClientLogMessage(withVisibility: visibility, andMessage: message))
-        displayLogs()
+        updateLogUI()
     }
 
-    func displayLogs() {
+    func updateLogUI() {
         guard let webView = webView else {
             return
         }
 
-        guard let logMessage = clientLogQueue.dequeue() else {
-            return
+        while clientLogQueue.size() > 0 {
+            guard let logMessage = clientLogQueue.dequeue() else {
+                return
+            }
+
+            var cleanMessage = logMessage.message.replacingOccurrences(of: "\\", with: "\\\\")
+            cleanMessage = cleanMessage.replacingOccurrences(of: "\"", with: "\\\"")
+            cleanMessage = cleanMessage.replacingOccurrences(of: "\n", with: "<br>")
+            cleanMessage = cleanMessage.replacingOccurrences(of: "\t", with: "&nbsp;&nbsp;&nbsp;&nbsp;")
+            DispatchQueue.main.async {
+                let logCommand = String(format: "addLog(\"%d\", \"%@\");", logMessage.visibility.rawValue, logMessage.message)
+                webView.evaluateJavaScript(logCommand, completionHandler: { _, error in
+                    if let error = error {
+                        print("Error Happened \(error.localizedDescription)")
+                    }
+
+                })
+            }
         }
 
-        var cleanMessage = logMessage.message.replacingOccurrences(of: "\\", with: "\\\\")
-        cleanMessage = cleanMessage.replacingOccurrences(of: "\"", with: "\\\"")
-        cleanMessage = cleanMessage.replacingOccurrences(of: "\n", with: "<br>")
-        cleanMessage = cleanMessage.replacingOccurrences(of: "\t", with: "&nbsp;&nbsp;&nbsp;&nbsp;")
-        DispatchQueue.main.async {
-            let logCommand = String(format: "addLog(\"%d\", \"%@\");", logMessage.visibility.rawValue, logMessage.message)
-            webView.evaluateJavaScript(logCommand, completionHandler: { _, error in
-                if let error = error {
-                    print("Error Happened \(error.localizedDescription)")
-                }
-
-            })
-        }
     }
 
 }

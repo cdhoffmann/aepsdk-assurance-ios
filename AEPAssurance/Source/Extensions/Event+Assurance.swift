@@ -38,6 +38,10 @@ extension Event {
     var isResponseRegionEvent : Bool {
         return name == AssuranceConstants.Places.EventName.RESPONSE_REGION_EVENT
     }
+    
+    var isResponseNearByEvent : Bool {
+        return name == AssuranceConstants.Places.EventName.RESPONSE_NEARBY_POI_EVENT && responseID == nil
+    }
 
     // MARK: - EventData values
     var sharedStateOwner: String? {
@@ -45,15 +49,40 @@ extension Event {
     }
     
     var poiCount: String {
-        return data?[AssuranceConstants.Places.EventDataKeys.COUNT] as? String ?? "-"
+        if let count = data?[AssuranceConstants.Places.EventDataKeys.COUNT] as? NSNumber {
+            return count.stringValue
+        }
+        return "-"
     }
-    
+
     var latitude: String {
-        return data?[AssuranceConstants.Places.EventDataKeys.LATITUDE] as? String ?? "-"
+        if let lat = data?[AssuranceConstants.Places.EventDataKeys.LATITUDE] as? Double {
+            return String(format: "%.6f", lat)
+        }
+        return "-"
     }
     
     var longitude: String {
-        return data?[AssuranceConstants.Places.EventDataKeys.LONGITUDE] as? String ?? "-"
+        if let lon = data?[AssuranceConstants.Places.EventDataKeys.LONGITUDE] as? Double {
+            return String(format: "%.6f", lon)
+        }
+        return "-"
+    }
+    
+    var regionEventType: String {
+        return data?[AssuranceConstants.Places.EventDataKeys.REGION_EVENT_TYPE] as? String ?? "-"
+    }
+    
+    var regionName: String {
+        let defaultValue = "-"
+        guard let region = data?[AssuranceConstants.Places.EventDataKeys.TRIGGERING_REGION] as? Dictionary<String, Any> else{
+            return defaultValue
+        }
+        return region[AssuranceConstants.Places.EventDataKeys.REGION_NAME] as? String ?? defaultValue
+    }
+    
+    var nearByPOIs: Array<Any> {
+        return data?[AssuranceConstants.Places.EventDataKeys.NEARBY_POI] as? Array ?? []
     }
     
 }

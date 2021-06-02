@@ -134,8 +134,9 @@ enum AssuranceConstants {
         
         enum EventName {
             static let REQUEST_NEARBY_POI = "requestgetnearbyplaces"
-            static let RESPONSE_REGION_EVENT = "responseprocessregionevent"
             static let REQUEST_RESET = "requestreset"
+            static let RESPONSE_REGION_EVENT = "responseprocessregionevent"
+            static let RESPONSE_NEARBY_POI_EVENT = "responsegetnearbyplaces"            
         }
         
         enum EventDataKeys {
