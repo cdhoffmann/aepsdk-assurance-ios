@@ -14,7 +14,7 @@ import AEPServices
 import Foundation
 import WebKit
 
-class iOSPinCodeScreen: SessionAuthorizing {
+class iOSPinCodeScreen: SessionAuthorizable {
     var assuranceExtension: Assurance
     var fullscreenMessage: FullscreenPresentable?
     var fullscreenWebView: WKWebView?

@@ -39,7 +39,7 @@
 		B6AB2DF326337BE700FE8AEA /* AssuranceStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AB2DF226337BE700FE8AEA /* AssuranceStateTests.swift */; };
 		B6AFD589263403EB00C63608 /* AssuranceEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AFD588263403EB00C63608 /* AssuranceEvent.swift */; };
 		B6AFD58E2634041E00C63608 /* AssuranceEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AFD58D2634041E00C63608 /* AssuranceEventTests.swift */; };
-		B6B0E2C9263C674F00EF5E21 /* SessionAuthorizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B0E2C8263C674F00EF5E21 /* SessionAuthorizing.swift */; };
+		B6B0E2C9263C674F00EF5E21 /* SessionAuthorizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B0E2C8263C674F00EF5E21 /* SessionAuthorizable.swift */; };
 		B6B0E2CD263C709100EF5E21 /* iOSPinCodeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B0E2CC263C709100EF5E21 /* iOSPinCodeScreen.swift */; };
 		B6B0E2D7263C7FAB00EF5E21 /* AssuranceSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B0E2D6263C7FAB00EF5E21 /* AssuranceSession.swift */; };
 		B6B23ACE26414C8100EE8153 /* iOSPinCodeScreen+FullScreenDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B23ACD26414C8100EE8153 /* iOSPinCodeScreen+FullScreenDelegate.swift */; };
@@ -71,6 +71,11 @@
 		B6D6A03A2660ECBD005042BE /* SocketEventListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D6A0352660ECBC005042BE /* SocketEventListener.swift */; };
 		B6D6A03F2660ED4D005042BE /* WebViewSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D6A03E2660ED4D005042BE /* WebViewSocket.swift */; };
 		B6D6A0412660ED56005042BE /* NativeSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D6A0402660ED56005042BE /* NativeSocket.swift */; };
+		B6FA604D266768AC00B77AF4 /* AssuranceSession+SocketEventListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FA604C266768AC00B77AF4 /* AssuranceSession+SocketEventListener.swift */; };
+		B6FA605026676CAE00B77AF4 /* AssuranceClientLogMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FA604F26676CAE00B77AF4 /* AssuranceClientLogMessage.swift */; };
+		B6FA605326676CD300B77AF4 /* iOSStatusUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FA605226676CD300B77AF4 /* iOSStatusUI.swift */; };
+		B6FA605626676D2700B77AF4 /* iOSStatusUI+FloatingButtonDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FA605526676D2700B77AF4 /* iOSStatusUI+FloatingButtonDelegate.swift */; };
+		B6FA605826676D3F00B77AF4 /* iOSStatusUI+FullScreenDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FA605726676D3F00B77AF4 /* iOSStatusUI+FullScreenDelegate.swift */; };
 		B6FEB8AC263A18E600F0F240 /* SocketScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FEB8AB263A18E600F0F240 /* SocketScript.swift */; };
 		B6FEB8B1263A18F500F0F240 /* InactiveIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FEB8AF263A18F500F0F240 /* InactiveIcon.swift */; };
 		B6FEB8B2263A18F500F0F240 /* ActiveIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FEB8B0263A18F500F0F240 /* ActiveIcon.swift */; };
@@ -155,7 +160,7 @@
 		B6AB2DF226337BE700FE8AEA /* AssuranceStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssuranceStateTests.swift; sourceTree = "<group>"; };
 		B6AFD588263403EB00C63608 /* AssuranceEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssuranceEvent.swift; sourceTree = "<group>"; };
 		B6AFD58D2634041E00C63608 /* AssuranceEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssuranceEventTests.swift; sourceTree = "<group>"; };
-		B6B0E2C8263C674F00EF5E21 /* SessionAuthorizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAuthorizing.swift; sourceTree = "<group>"; };
+		B6B0E2C8263C674F00EF5E21 /* SessionAuthorizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAuthorizable.swift; sourceTree = "<group>"; };
 		B6B0E2CC263C709100EF5E21 /* iOSPinCodeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSPinCodeScreen.swift; sourceTree = "<group>"; };
 		B6B0E2D2263C7E5300EF5E21 /* MockUIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUIService.swift; sourceTree = "<group>"; };
 		B6B0E2D6263C7FAB00EF5E21 /* AssuranceSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssuranceSession.swift; sourceTree = "<group>"; };
@@ -188,6 +193,11 @@
 		B6D6A0352660ECBC005042BE /* SocketEventListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketEventListener.swift; sourceTree = "<group>"; };
 		B6D6A03E2660ED4D005042BE /* WebViewSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewSocket.swift; sourceTree = "<group>"; };
 		B6D6A0402660ED56005042BE /* NativeSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeSocket.swift; sourceTree = "<group>"; };
+		B6FA604C266768AC00B77AF4 /* AssuranceSession+SocketEventListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssuranceSession+SocketEventListener.swift"; sourceTree = "<group>"; };
+		B6FA604F26676CAE00B77AF4 /* AssuranceClientLogMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssuranceClientLogMessage.swift; sourceTree = "<group>"; };
+		B6FA605226676CD300B77AF4 /* iOSStatusUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSStatusUI.swift; sourceTree = "<group>"; };
+		B6FA605526676D2700B77AF4 /* iOSStatusUI+FloatingButtonDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "iOSStatusUI+FloatingButtonDelegate.swift"; sourceTree = "<group>"; };
+		B6FA605726676D3F00B77AF4 /* iOSStatusUI+FullScreenDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "iOSStatusUI+FullScreenDelegate.swift"; sourceTree = "<group>"; };
 		B6FEB8AB263A18E600F0F240 /* SocketScript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketScript.swift; sourceTree = "<group>"; };
 		B6FEB8AF263A18F500F0F240 /* InactiveIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InactiveIcon.swift; sourceTree = "<group>"; };
 		B6FEB8B0263A18F500F0F240 /* ActiveIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveIcon.swift; sourceTree = "<group>"; };
@@ -266,17 +276,19 @@
 		B640719B262C313E00C43183 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				B6B0E2B6263A737600EF5E21 /* PincodeEntryUI */,
+				B6FA604E26676C7B00B77AF4 /* StatusUI */,
 				B6D6A0302660EC93005042BE /* Socket */,
 				B6CECC632655A8A7000D517F /* Primitives */,
 				B64FDF6C264F33CD00D33192 /* Plugin */,
 				B670E67D26393300000FCB96 /* BuiltResources */,
 				B6407221262CEACE00C43183 /* Extensions */,
-				B6B0E2B6263A737600EF5E21 /* PincodeEntry */,
 				B6407204262C90CD00C43183 /* Public */,
 				B640719C262C313E00C43183 /* AEPAssurance.h */,
 				B64071D2262C368C00C43183 /* Assurance.swift */,
 				B6D2A92626334A3D0062AC5E /* Assurance+State.swift */,
 				B6B0E2D6263C7FAB00EF5E21 /* AssuranceSession.swift */,
+				B6FA604C266768AC00B77AF4 /* AssuranceSession+SocketEventListener.swift */,
 				B6AFD588263403EB00C63608 /* AssuranceEvent.swift */,
 				B640722A262CF06100C43183 /* AssuranceEnvironment.swift */,
 				B64071D6262C376A00C43183 /* AssuranceConstants.swift */,
@@ -412,13 +424,13 @@
 			path = HTML;
 			sourceTree = "<group>";
 		};
-		B6B0E2B6263A737600EF5E21 /* PincodeEntry */ = {
+		B6B0E2B6263A737600EF5E21 /* PincodeEntryUI */ = {
 			isa = PBXGroup;
 			children = (
-				B6B0E2C8263C674F00EF5E21 /* SessionAuthorizing.swift */,
+				B6B0E2C8263C674F00EF5E21 /* SessionAuthorizable.swift */,
 				B6B23ACC26414C5E00EE8153 /* iOS */,
 			);
-			path = PincodeEntry;
+			path = PincodeEntryUI;
 			sourceTree = "<group>";
 		};
 		B6B23ACC26414C5E00EE8153 /* iOS */ = {
@@ -479,6 +491,25 @@
 				B6D6A03E2660ED4D005042BE /* WebViewSocket.swift */,
 			);
 			path = WebView;
+			sourceTree = "<group>";
+		};
+		B6FA604E26676C7B00B77AF4 /* StatusUI */ = {
+			isa = PBXGroup;
+			children = (
+				B6FA605126676CC000B77AF4 /* iOS */,
+				B6FA604F26676CAE00B77AF4 /* AssuranceClientLogMessage.swift */,
+			);
+			path = StatusUI;
+			sourceTree = "<group>";
+		};
+		B6FA605126676CC000B77AF4 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				B6FA605226676CD300B77AF4 /* iOSStatusUI.swift */,
+				B6FA605526676D2700B77AF4 /* iOSStatusUI+FloatingButtonDelegate.swift */,
+				B6FA605726676D3F00B77AF4 /* iOSStatusUI+FullScreenDelegate.swift */,
+			);
+			path = iOS;
 			sourceTree = "<group>";
 		};
 		B6FEB88A263A0F0700F0F240 /* Icons */ = {
@@ -842,6 +873,7 @@
 				B6CECC652655A8D3000D517F /* ThreadSafeQueue.swift in Sources */,
 				B6D6A015265D8836005042BE /* AssuranceClientInfo.swift in Sources */,
 				B6AFD589263403EB00C63608 /* AssuranceEvent.swift in Sources */,
+				B6FA605026676CAE00B77AF4 /* AssuranceClientLogMessage.swift in Sources */,
 				B6FEB8AC263A18E600F0F240 /* SocketScript.swift in Sources */,
 				B6CECC5626544700000D517F /* PluginHub.swift in Sources */,
 				B670E72526395954000FCB96 /* PinDialog.swift in Sources */,
@@ -854,16 +886,20 @@
 				B6D6A022265F914D005042BE /* PluginScreenshot.swift in Sources */,
 				B640722B262CF06100C43183 /* AssuranceEnvironment.swift in Sources */,
 				B6FEB8B2263A18F500F0F240 /* ActiveIcon.swift in Sources */,
-				B6B0E2C9263C674F00EF5E21 /* SessionAuthorizing.swift in Sources */,
+				B6B0E2C9263C674F00EF5E21 /* SessionAuthorizable.swift in Sources */,
 				B6FEB8B1263A18F500F0F240 /* InactiveIcon.swift in Sources */,
 				B60BAC0C26434ED90054CD21 /* AssuranceSocketError.swift in Sources */,
 				B6B0E2CD263C709100EF5E21 /* iOSPinCodeScreen.swift in Sources */,
 				B6407206262C90FA00C43183 /* Assurance+PublicAPI.swift in Sources */,
 				B6B0E2D7263C7FAB00EF5E21 /* AssuranceSession.swift in Sources */,
+				B6FA605826676D3F00B77AF4 /* iOSStatusUI+FullScreenDelegate.swift in Sources */,
 				B64FDF6E264F33EF00D33192 /* AssurancePlugin.swift in Sources */,
+				B6FA604D266768AC00B77AF4 /* AssuranceSession+SocketEventListener.swift in Sources */,
 				B6D6A0382660ECBD005042BE /* SocketConnectable.swift in Sources */,
+				B6FA605326676CD300B77AF4 /* iOSStatusUI.swift in Sources */,
 				B6D6A0412660ED56005042BE /* NativeSocket.swift in Sources */,
 				B6D6A01B265F027C005042BE /* AssuranceBlob.swift in Sources */,
+				B6FA605626676D2700B77AF4 /* iOSStatusUI+FloatingButtonDelegate.swift in Sources */,
 				B6AB2DE6263372AF00FE8AEA /* Assurance+State.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

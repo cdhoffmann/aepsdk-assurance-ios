@@ -24,6 +24,8 @@ public class Assurance: NSObject, Extension {
 
     let datastore = NamedCollectionDataStore(name: AssuranceConstants.EXTENSION_NAME)
     var assuranceSession: AssuranceSession?
+    var shouldProcessEvents: Bool = true
+    var timer: DispatchSourceTimer?
 
     var sessionId: String? {
         get {
@@ -41,6 +43,19 @@ public class Assurance: NSObject, Extension {
         }
         set {
             datastore.set(key: AssuranceConstants.DataStoreKeys.ENVIRONMENT, value: newValue.rawValue)
+        }
+    }
+    
+    var socketURL: String? {
+        get {
+            datastore.getString(key: AssuranceConstants.DataStoreKeys.SOCKETURL)
+        }
+        set {
+            if let newValue = newValue {
+                datastore.set(key: AssuranceConstants.DataStoreKeys.SOCKETURL, value: newValue)
+            } else {
+                datastore.remove(key: AssuranceConstants.DataStoreKeys.SOCKETURL)
+            }
         }
     }
 
@@ -62,6 +77,16 @@ public class Assurance: NSObject, Extension {
         registerListener(type: AssuranceConstants.SDKEventType.ASSURANCE, source: EventSource.requestContent, listener: handleAssuranceRequestContent)
         registerListener(type: EventType.wildcard, source: EventSource.wildcard, listener: handleWildcardEvent)
         self.assuranceSession = AssuranceSession(self)
+        
+        /// if the Assurance session was already connected in the previous app session, go ahead and reconnect socket
+        /// and do not turn on the unregister timer
+        if let _ = self.socketURL {
+            assuranceSession?.startSession()
+            return
+        }
+        
+        /// if the Assurance session is not previously connected, turn on 5 sec timer to wait for Assurance deeplink
+        startShutDownTimer()
     }
 
     public func onUnregistered() {}
@@ -71,7 +96,7 @@ public class Assurance: NSObject, Extension {
     }
 
     public func readyForEvent(_ event: Event) -> Bool {
-        return true
+        return shouldProcessEvents
     }
 
     private func handleAssuranceRequestContent(event: Event) {
@@ -161,5 +186,47 @@ public class Assurance: NSObject, Extension {
         var assuranceEvent = AssuranceEvent.from(mobileCoreEvent: event)
         assuranceEvent.payload?.updateValue(AnyCodable.init(sharedStatePayload), forKey: AssuranceConstants.PayloadKey.METADATA)
         assuranceSession?.sendEvent(assuranceEvent)
+    }
+    
+    
+    // MARK:- Private methods
+    
+    private func startShutDownTimer() {
+        let queue = DispatchQueue.init(label: "com.adobe.assurance.shutdowntimer", qos: .background)
+        timer = createDispatchTimer(queue: queue, block: {
+            self.shutDownAssurance()
+        })
+    }
+
+    private func shutDownAssurance() {
+        shouldProcessEvents = false
+        invalidateTimer()
+    }
+
+    private func invalidateTimer() {
+        timer?.cancel()
+        timer = nil
+    }
+    
+    private func createDispatchTimer(queue: DispatchQueue, block : @escaping () -> Void) -> DispatchSourceTimer {
+        let timer = DispatchSource.makeTimerSource(queue: queue)
+        timer.schedule(wallDeadline: .now() + 5)
+        timer.setEventHandler(handler: block)
+        timer.resume()
+        return timer
+    }
+    
+    // MARK: Places event handlers
+    private func handlePlacesRequest(event : Event) {
+        if event.isRequestNearByPOIEvent {
+            assuranceSession?.addClientLog("Places - Requesting %d nearby POIs from (%.6f, %.6f)", visibility: .normal)
+        }
+        else if event.isRequestResetEvent{
+            assuranceSession?.addClientLog("Places - Resetting location", visibility: .normal)
+        }
+    }
+    
+    private func handlePlacesResponse(event : Event) {
+        
     }
 }

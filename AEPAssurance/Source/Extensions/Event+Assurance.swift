@@ -18,9 +18,42 @@ extension Event {
     var isSharedStateEvent: Bool {
         return type == EventType.hub && source == EventSource.sharedState
     }
+    
+    var isPlacesRequestEvent: Bool {
+        return type == EventType.places && source == EventSource.requestContent
+    }
+    
+    var isPlacesResponseEvent: Bool {
+        return type == EventType.places && source == EventSource.responseContent
+    }
+    
+    var isRequestNearByPOIEvent : Bool {
+        return name == AssuranceConstants.Places.EventName.REQUEST_NEARBY_POI
+    }
+    
+    var isRequestResetEvent : Bool {
+        return name == AssuranceConstants.Places.EventName.REQUEST_RESET
+    }
+    
+    var isResponseRegionEvent : Bool {
+        return name == AssuranceConstants.Places.EventName.RESPONSE_REGION_EVENT
+    }
 
     // MARK: - EventData values
     var sharedStateOwner: String? {
         return data?[AssuranceConstants.EventDataKey.SHARED_STATE_OWNER] as? String
     }
+    
+    var poiCount: String {
+        return data?[AssuranceConstants.Places.EventDataKeys.COUNT] as? String ?? "-"
+    }
+    
+    var latitude: String {
+        return data?[AssuranceConstants.Places.EventDataKeys.LATITUDE] as? String ?? "-"
+    }
+    
+    var longitude: String {
+        return data?[AssuranceConstants.Places.EventDataKeys.LONGITUDE] as? String ?? "-"
+    }
+    
 }
