@@ -31,6 +31,8 @@ extension iOSPinCodeScreen: FullscreenMessageDelegate {
         fullscreenMessage = nil
     }
 
+    /// Thread: main thread
+    /// 
     /// Invoked when the fullscreen message is attempting to load a url
     /// - Parameters:
     ///     - message: Fullscreen message
@@ -77,9 +79,13 @@ extension iOSPinCodeScreen: FullscreenMessageDelegate {
                                    passcode,
                                    orgID,
                                    assuranceExtension.clientID)
-
+            
+            guard let url = URL(string: socketURL) else {
+                connectionFailedWithError(AssuranceSocketError.NO_URL, shouldShowRetry: true)
+                return false
+            }
             self.connectionInitialized()
-            self.authorizedURLCallback?(socketURL)
+            self.authorizedURLCallback?(url)
         }
 
         return false
