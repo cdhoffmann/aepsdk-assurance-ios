@@ -96,6 +96,9 @@ public class Assurance: NSObject, Extension {
     }
 
     public func readyForEvent(_ event: Event) -> Bool {
+        if event.isAssuranceRequestContent{
+            return true
+        }
         return shouldProcessEvents
     }
 

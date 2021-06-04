@@ -19,6 +19,10 @@ extension Event {
         return type == EventType.hub && source == EventSource.sharedState
     }
     
+    var isAssuranceRequestContent: Bool {
+        return type == AssuranceConstants.SDKEventType.ASSURANCE && source == EventSource.requestContent
+    }
+    
     var isPlacesRequestEvent: Bool {
         return type == EventType.places && source == EventSource.requestContent
     }
