@@ -60,17 +60,17 @@ extension iOSPinCodeScreen: FullscreenMessageDelegate {
         if host == AssuranceConstants.HTMLURLPath.CONFIRM {
             // get the entered 4 digit code from url
             guard let passcode = URL(string: url ?? "")?.params["code"] else {
-                connectionFailedWithError(AssuranceSocketError.NO_PINCODE, shouldShowRetry: true)
+                self.pinCodeCallback?(nil, AssuranceSocketError.NO_PINCODE)
                 return false
             }
 
             guard let sessionId = assuranceExtension.sessionId else {
-                connectionFailedWithError(AssuranceSocketError.NO_SESSION_ID, shouldShowRetry: false)
+                self.pinCodeCallback?(nil, AssuranceSocketError.NO_SESSION_ID)
                 return false
             }
 
             guard let orgID = getURLEncodedOrgID() else {
-                connectionFailedWithError(AssuranceSocketError.NO_ORG_ID, shouldShowRetry: true)
+                self.pinCodeCallback?(nil, AssuranceSocketError.NO_ORG_ID)
                 return false
             }
 
@@ -83,7 +83,7 @@ extension iOSPinCodeScreen: FullscreenMessageDelegate {
                                    assuranceExtension.clientID)
             
             guard let url = URL(string: socketURL) else {
-                connectionFailedWithError(AssuranceSocketError.NO_URL, shouldShowRetry: true)
+                self.pinCodeCallback?(nil, AssuranceSocketError.NO_URL)
                 return false
             }
             self.connectionInitialized()

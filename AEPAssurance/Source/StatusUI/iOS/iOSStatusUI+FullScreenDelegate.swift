@@ -15,6 +15,10 @@ import Foundation
 import WebKit
 
 extension iOSStatusUI: FullscreenMessageDelegate {
+    func webViewHasCompletedLoading() {
+        updateLogUI()
+    }
+    
 
     /// Invoked when statusUI fullscreen message is displayed
     /// - Parameters:

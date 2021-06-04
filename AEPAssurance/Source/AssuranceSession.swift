@@ -27,17 +27,22 @@ class AssuranceSession {
     /// indicates if the session is currently attempting to reconnect. This flag is set when the session disconnects due to some retry-able reason,
     /// This flag is reset when the session is connected
     var isAttemptingToReconnect: Bool = false
+    
     /// indicates if Assurance SDK can start forwarding events to the session. This flag is set when a command  `startForwarding` is received from the socket.
     var canStartForwarding: Bool = false
     
     
     lazy var socket: SocketConnectable  = {
-        if #available(iOS 13.0, *) {
-            return NativeSocket(withListener: self)
-        } else {
             return WebViewSocket(withListener: self)
-        }
     }()
+    
+//    lazy var socket: SocketConnectable  = {
+//        if #available(iOS 13.0, *) {
+//            return NativeSocket(withListener: self)
+//        } else {
+//            return WebViewSocket(withListener: self)
+//        }
+//    }()
     
     lazy var statusUI: iOSStatusUI  = {
         iOSStatusUI.init(withSession: self)
@@ -49,6 +54,7 @@ class AssuranceSession {
         self.assuranceExtension = assuranceExtension
         handleInBoundEvents()
         handleOutBoundEvents()
+        registerInternalPlugins()
     }
 
     /// Called when a valid assurance deeplink url is received from the startSession API
@@ -56,17 +62,28 @@ class AssuranceSession {
     ///
     /// Thread : Listener thread from EventHub
     func startSession() {
-        registerInternalPlugins()
         
-        if let socketURL = assuranceExtension.socketURL {
+        if (socket.socketState == .OPEN || socket.socketState == .CONNECTING) {
+            Log.debug(label: AssuranceConstants.LOG_TAG, "There is already an ongoing Assurance session. Ignoring to start new session.")
+            return
+        }
+        
+        // if there is a socket URL already connected in the previous session then reuse it.
+        if let socketURL = assuranceExtension.connectedSocketURL {
             self.statusUI.display()
             socket.connect(withUrl: URL(string: socketURL)!)
             return
         }
         
+        // if there were no previous connected URL then start a new session
+        startNewSession()
+    }
+    
+    func startNewSession() {
         let pinCodeScreen = iOSPinCodeScreen.init(withExtension: assuranceExtension)
         self.pinCodeScreen = pinCodeScreen
-
+        
+        // invoke the pinpad screen and create a socketURL with the pincode and other essential parameters
         pinCodeScreen.getSocketURL(callback: { [weak self]  socketUrl, error in
             if let error = error {
                 self?.handleConnectionError(error: error, closeCode: nil)
@@ -80,23 +97,11 @@ class AssuranceSession {
             
             // Thread : main thread (this callback is called from `overrideUrlLoad` method of WKWebView)
             Log.debug(label: AssuranceConstants.LOG_TAG, "Attempting to make a socket connection with URL : \(socketUrl)")
-            self?.assuranceExtension.socketURL = socketUrl.absoluteString
             self?.socket.connect(withUrl: socketUrl)
             pinCodeScreen.connectionInitialized()
         })
-
     }
 
-    func sendEvent(_ assuranceEvent: AssuranceEvent) {
-        outboundQueue.enqueue(newElement: assuranceEvent)
-        outboundSource.add(data: 1)
-    }
-    
-    func sendClientInfoEvent() {
-        Log.debug(label: AssuranceConstants.LOG_TAG, "Sending client info event to Assurance")
-        let clientEvent = AssuranceEvent.init(type: AssuranceConstants.EventType.CLIENT, payload: AssuranceClientInfo.getData())
-        self.socket.sendEvent(clientEvent)
-    }
     
     func terminateSession() {
         socket.disconnect()
@@ -104,84 +109,23 @@ class AssuranceSession {
         assuranceExtension.clearState()
     }
     
-    func addClientLog(_ message: String, visibility: AssuranceClientLogVisibility) {
-        statusUI.addClientLog(message, visibility: visibility)
-    }
-    
     func clearSessionData() {
         canStartForwarding = false
+        pluginHub.notifyPluginsOnSessionTerminated()
         assuranceExtension.sessionId = nil
-        assuranceExtension.socketURL = nil
+        assuranceExtension.connectedSocketURL = nil
         assuranceExtension.environment = AssuranceConstants.DEFAULT_ENVIRONMENT
         pinCodeScreen = nil
     }
     
-    
-    // MARK: - Private methods
-    
-    private func handleOutBoundEvents() {
-        outboundSource.setEventHandler(handler: {
-            if SocketState.OPEN != self.socket.socketState {
-                Log.trace(label: AssuranceConstants.LOG_TAG, "Queuing event before connection has been initialized(waiting for deep link to initialize connection with pin code entry)")
-                return
-            }
-
-            if !self.canStartForwarding {
-                Log.trace(label: AssuranceConstants.LOG_TAG, "Assurance Extension hasn't received startForwarding control event to start sending the queued events.")
-                return
-            }
-
-            while self.outboundQueue.size() >= 0 {
-                let event = self.outboundQueue.dequeue()
-                if let event = event {
-                    self.socket.sendEvent(event)
-                }
-            }
-        })
-        outboundSource.resume()
-    }
-    
-    
-    private func handleInBoundEvents() {
-        inboundSource.setEventHandler(handler: {
-            while self.inboundQueue.size() >= 0 {
-                let event = self.inboundQueue.dequeue()
-                if let event = event {
-                    self.pluginHub.notifyPluginsOfEvent(event)
-                }
-            }
-        })
-        inboundSource.resume()
+    func addClientLog(_ message: String, visibility: AssuranceClientLogVisibility) {
+        statusUI.addClientLog(message, visibility: visibility)
     }
     
     private func registerInternalPlugins() {
         pluginHub.registerPlugin(PluginFakeEvent(), toSession: self)
         pluginHub.registerPlugin(PluginConfigModify(), toSession: self)
         pluginHub.registerPlugin(PluginScreenshot(), toSession: self)
-    }
-    
-    
-    
-    func handleConnectionError(error: AssuranceSocketError, closeCode: Int?) {
-        // if the pinCode screen is still being displayed. Then use the same webView to display error
-        if (pinCodeScreen?.isDisplayed == true) {
-            pinCodeScreen?.connectionFailedWithError(error, shouldShowRetry: false)
-        } else {
-            let errorView = ErrorView.init(AssuranceSocketError.CLIENT_ERROR)
-            errorView.display()
-        }
-        
-        statusUI.remove()
-        clearSessionData()
-        
-        
-        if let closeCode = closeCode {
-            pluginHub.notifyPluginsOnDisconnect(withCloseCode: closeCode)
-            // since we don't give retry option for these errors and UI will be dismissed anyway, hence notify plugins for onSessionTerminated
-            if !error.info.shouldRetry {
-                pluginHub.notifyPluginsOnSessionTerminated()
-            }
-        }
     }
 
 }

@@ -17,6 +17,7 @@ import WebKit
 class WebViewSocket: NSObject, SocketConnectable, WKNavigationDelegate, WKScriptMessageHandler {
 
     var socketListener: SocketEventListener
+    var socketURL: URL?
 
     /// variable tracking the current socket status
     var socketState: SocketState = .UNKNOWN {
@@ -38,7 +39,6 @@ class WebViewSocket: NSObject, SocketConnectable, WKNavigationDelegate, WKScript
 
     private var webView: WKWebView?
     private var loadNav: WKNavigation?
-    private var socketURL: URL?
     private var socketEventHandlers = ThreadSafeDictionary<String, messageHandlerBlock>(identifier: "com.adobe.assurance.socketEventHandler")
     private let socketQueue = DispatchQueue(label: "com.adobe.assurance.WebViewSocketConnection") // serial queue
     private let pageContent = "<HTML><HEAD></HEAD><BODY></BODY></HTML>"
@@ -163,8 +163,22 @@ class WebViewSocket: NSObject, SocketConnectable, WKNavigationDelegate, WKScript
             self.socketListener.webSocketOnError(self)
         })
 
-        registerSocketCallback("onclose", with: { _ in
+        registerSocketCallback("onclose", with: { message in
             self.socketState = .CLOSED
+            self.socketURL = nil
+            // message body obtained from onclose call has the following keys
+            // 1. closeCode   - an Integer representing closeCode for the socket
+            // 2. reason      - a string value representing the reason for socket closure
+            // 3. wasClean    - a boolean that Indicates whether or not the connection was cleanly closed.
+            guard let messageBody = message.body as? Dictionary<String, Any> else {
+                return
+            }
+            
+            let closeCode = messageBody["closeCode"] as? Int ?? -1
+            let reason = messageBody["reason"] as? String ?? ""
+            let wasClean = messageBody["wasClean"] as? Bool ?? false
+            self.socketListener.webSocketDidDisconnectConnect(self, closeCode, reason, wasClean)
+
         })
 
         registerSocketCallback("onmessage", with: { message in

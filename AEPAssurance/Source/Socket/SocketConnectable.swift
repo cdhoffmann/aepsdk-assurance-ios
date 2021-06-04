@@ -14,7 +14,9 @@ import Foundation
 
 /// protocol that needs to be followed by the class that implements the socket connection
 protocol SocketConnectable {
-    ///
+    
+    var socketURL: URL? {get}
+    
     var socketListener: SocketEventListener { get }
 
     /// Initializes a socketConnectable with a listener

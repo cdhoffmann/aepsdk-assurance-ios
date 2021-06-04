@@ -42,6 +42,9 @@ class iOSStatusUI {
 
     func remove() {
         self.floatingButton?.dismiss()
+        self.floatingButton = nil
+        self.fullScreenMessage = nil
+        self.webView = nil
     }
 
     func updateForSocketConnected() {
@@ -53,12 +56,7 @@ class iOSStatusUI {
         addClientLog("Assurance disconnected. Attempting to reconnect..", visibility: .low)
         floatingButton?.setButtonImage(imageData: Data(bytes: InactiveIcon.content, count: InactiveIcon.content.count))
     }
-
-    func updateForSocketDisconnected() {
-        addClientLog("Assurance disconnected.", visibility: .low)
-        self.floatingButton?.dismiss()
-    }
-
+    
     func addClientLog(_ message: String, visibility: AssuranceClientLogVisibility) {
         clientLogQueue.enqueue(newElement: AssuranceClientLogMessage(withVisibility: visibility, andMessage: message))
         updateLogUI()

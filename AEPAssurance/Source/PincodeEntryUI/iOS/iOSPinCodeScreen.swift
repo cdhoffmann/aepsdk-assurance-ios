@@ -50,10 +50,9 @@ class iOSPinCodeScreen: SessionAuthorizable {
     /// Invoked when the a socket connection is failed.
     /// - Parameters
     ///     - error - an `AssuranceSocketError` explaining the reason why the connection failed
-    ///     - shouldShowRetry - boolean indication if the retry button on the pinpad button should still be shown
-    func connectionFailedWithError(_ error: AssuranceSocketError, shouldShowRetry: Bool) {
+    func connectionFailedWithError(_ error: AssuranceSocketError) {
         Log.debug(label: AssuranceConstants.LOG_TAG, String(format: "Assurance connection establishment failed. Error : %@, Description : %@", error.info.name, error.info.description))
-        let jsFunctionCall = String(format: "showError('%@','%@', %d);", error.info.name, error.info.description, shouldShowRetry)
+        let jsFunctionCall = String(format: "showError('%@','%@', %d);", error.info.name, error.info.description, error.info.shouldRetry)
         fullscreenWebView?.evaluateJavaScript(jsFunctionCall, completionHandler: nil)
     }
 

@@ -20,20 +20,30 @@ import CoreLocation
 struct ContentView: View {
 
     let timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
+    @State private var assuranceURL: String = "party://?adb_validation_sessionid=51dacdd3-2dc6-42ed-a957-a172ecca5315"
 
     var body: some View {
         VStack {
             Text("Assurance Version: v" + Assurance.extensionVersion).padding()
-            HStack {
-                Text("Analytics").padding(.leading).font(.system(size: 25, weight: .heavy, design: .default))
-                Spacer()
-            }
+ 
+            VStack{
+                TextField("Copy Assurance Session URL to here", text: $assuranceURL).background(Color(.systemGray6)).cornerRadius(5.0).frame(height:100)
+                HStack {
+                    Button(action: {
+                        if let url = URL(string: self.assuranceURL) {
+                            Assurance.startSession(url: url)
+                        }
+                    }, label: {
+                        Text("Connect to Assurance")
+                    }).buttonStyle(RoundedRectangleButtonStyle()).padding()
+                }
+            }.padding()
 
 //                        Text("Hello, World!")
 //                            .onReceive(timer) { time in
 //                                MobileCore.track(state: "Fabulous action", data: nil)
 //                        }
-
+            
             HStack {
                 Button(action: {
                     MobileCore.track(state: "Fabulous action", data: nil)
@@ -142,4 +152,3 @@ struct RoundedRectangleButtonStyle: ButtonStyle {
         .scaleEffect(configuration.isPressed ? 0.95 : 1)
     }
 }
-

@@ -46,7 +46,7 @@ public class Assurance: NSObject, Extension {
         }
     }
     
-    var socketURL: String? {
+    var connectedSocketURL: String? {
         get {
             datastore.getString(key: AssuranceConstants.DataStoreKeys.SOCKETURL)
         }
@@ -80,7 +80,7 @@ public class Assurance: NSObject, Extension {
         
         /// if the Assurance session was already connected in the previous app session, go ahead and reconnect socket
         /// and do not turn on the unregister timer
-        if let _ = self.socketURL {
+        if let _ = self.connectedSocketURL {
             assuranceSession?.startSession()
             return
         }

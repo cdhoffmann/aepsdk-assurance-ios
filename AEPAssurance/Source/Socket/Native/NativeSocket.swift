@@ -16,6 +16,7 @@ import WebKit
 
 @available(iOS 13.0, *)
 class NativeSocket: NSObject, SocketConnectable, URLSessionDelegate, URLSessionWebSocketDelegate {
+    var socketURL: URL?
     var socketListener: SocketEventListener
     var socketState: SocketState = .UNKNOWN {
         didSet {
@@ -78,7 +79,7 @@ class NativeSocket: NSObject, SocketConnectable, URLSessionDelegate, URLSessionW
         socketState = .OPEN
         self.socketListener.webSocketDidConnect(self)
     }
-
+    
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
         socketState = .CLOSED
         self.socketListener.webSocketDidDisconnectConnect(self, closeCode.rawValue, reason?.base64EncodedString() ?? "", true)

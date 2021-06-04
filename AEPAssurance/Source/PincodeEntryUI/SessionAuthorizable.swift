@@ -37,5 +37,5 @@ protocol SessionAuthorizable {
     /// - Parameters
     ///    - error - an `AssuranceSocketError` explaining the reason why the connection failed
     ///    - shouldShowRetry - boolean indication if the retry button on the pinpad button should still be shown
-    func connectionFailedWithError(_ error: AssuranceSocketError, shouldShowRetry: Bool)
+    func connectionFailedWithError(_ error: AssuranceSocketError)
 }

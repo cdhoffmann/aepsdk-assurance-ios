@@ -15,6 +15,7 @@ import AEPServices
 import WebKit
 
 class ErrorView : FullscreenMessageDelegate {
+    
     var error: AssuranceSocketError
     var fullscreenMessage: FullscreenPresentable?
     var fullscreenWebView: WKWebView?
@@ -45,7 +46,19 @@ class ErrorView : FullscreenMessageDelegate {
             return true
         }
         
+        // when the user hits "Cancel" on the iOS pinpad screen. Dismiss the fullscreen message
+        // return false, to indicate that the URL has been handled
+        if host == AssuranceConstants.HTMLURLPath.CANCEL {
+            message.dismiss()
+            return false
+        }
+
+        
         return false
+    }
+    
+    func webViewHasCompletedLoading() {
+        loadError()
     }
     
     func onShowFailure() {
@@ -57,5 +70,5 @@ class ErrorView : FullscreenMessageDelegate {
         let jsFunctionCall = String(format: "showError('%@','%@', %d);", error.info.name, error.info.description, false)
         fullscreenWebView?.evaluateJavaScript(jsFunctionCall, completionHandler: nil)
     }
-    
+        
 }
