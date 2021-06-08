@@ -31,6 +31,8 @@ class AssuranceSession {
     /// indicates if Assurance SDK can start forwarding events to the session. This flag is set when a command  `startForwarding` is received from the socket.
     var canStartForwarding: Bool = false
     
+    var didClearBootEvent: Bool = false
+    
     
     lazy var socket: SocketConnectable  = {
             return WebViewSocket(withListener: self)
@@ -101,15 +103,21 @@ class AssuranceSession {
             pinCodeScreen.connectionInitialized()
         })
     }
+    
+    func clearQueueEvents() {
+        inboundQueue.clear()
+        outboundQueue.clear()
+        didClearBootEvent = true
+    }
 
     
     func terminateSession() {
         socket.disconnect()
         clearSessionData()
-        assuranceExtension.clearState()
     }
     
     func clearSessionData() {
+        assuranceExtension.clearState()
         canStartForwarding = false
         pluginHub.notifyPluginsOnSessionTerminated()
         assuranceExtension.sessionId = nil

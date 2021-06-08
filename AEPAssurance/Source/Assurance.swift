@@ -74,13 +74,13 @@ public class Assurance: NSObject, Extension {
     }()
 
     public func onRegistered() {
-        registerListener(type: AssuranceConstants.SDKEventType.ASSURANCE, source: EventSource.requestContent, listener: handleAssuranceRequestContent)
         registerListener(type: EventType.wildcard, source: EventSource.wildcard, listener: handleWildcardEvent)
         self.assuranceSession = AssuranceSession(self)
         
         /// if the Assurance session was already connected in the previous app session, go ahead and reconnect socket
         /// and do not turn on the unregister timer
         if let _ = self.connectedSocketURL {
+            shareState()
             assuranceSession?.startSession()
             return
         }
@@ -96,10 +96,7 @@ public class Assurance: NSObject, Extension {
     }
 
     public func readyForEvent(_ event: Event) -> Bool {
-        if event.isAssuranceRequestContent{
-            return true
-        }
-        return shouldProcessEvents
+        return true
     }
 
     private func handleAssuranceRequestContent(event: Event) {
@@ -131,6 +128,8 @@ public class Assurance: NSObject, Extension {
         // invalidate the timer
         invalidateTimer()
 
+        shouldProcessEvents = true
+        
         // save the environment and sessionID
         environment = AssuranceEnvironment.init(envString: environmentString)
         self.sessionId = sessionId
@@ -143,6 +142,14 @@ public class Assurance: NSObject, Extension {
     /// - Parameters:
     /// - event - a mobileCore's `Event`
     private func handleWildcardEvent(event: Event) {
+        if event.isAssuranceRequestContent {
+            handleAssuranceRequestContent(event: event)
+        }
+        
+        if !shouldProcessEvents {
+            return
+        }
+            
         if event.isSharedStateEvent {
             processSharedStateEvent(event: event)
             return
@@ -201,9 +208,66 @@ public class Assurance: NSObject, Extension {
         assuranceEvent.payload?.updateValue(AnyCodable.init(sharedStatePayload), forKey: AssuranceConstants.PayloadKey.METADATA)
         assuranceSession?.sendEvent(assuranceEvent)
     }
+
+    func getAllExtensionStateData() -> [AssuranceEvent] {
+        var stateEvents: [AssuranceEvent] = []
+        
+        let eventHubState = runtime.getSharedState(extensionName: AssuranceConstants.SharedStateName.EVENT_HUB, event: nil, barrier: false)
+        guard eventHubState?.status == .set, let registeredExtension = eventHubState?.value else {
+            return stateEvents
+        }
+        
+        guard let extensionsMap = registeredExtension[AssuranceConstants.EventDataKey.EXTENSIONS] as? [String:Any] else {
+            return stateEvents
+        }
+            
+
+        for (extensionName, _) in extensionsMap {
+            let friendlyName = getFriendlyExtensionName(extensionMap: extensionsMap, extensionName: extensionName)
+            stateEvents.append(contentsOf: getStateForExtension(stateOwner: extensionName, eventName: "\(friendlyName) State"))
+        }
+
+        return stateEvents
+    }
+
     
     
     // MARK:- Private methods
+    
+    private func getFriendlyExtensionName(extensionMap: [String: Any], extensionName: String) -> String {
+        if let extensionDetails = extensionMap[extensionName] as? [String: Any] {
+            if let friendlyName = extensionDetails[AssuranceConstants.EventDataKey.FRIENDLY_NAME] as? String {
+                return friendlyName
+            }
+        }
+        return extensionName
+    }
+    
+    private func getStateForExtension(stateOwner: String, eventName: String) -> Array<AssuranceEvent> {
+        var stateEvents: [AssuranceEvent] = []
+        
+        let regularSharedState = runtime.getSharedState(extensionName: stateOwner, event: nil, barrier: false)
+        if regularSharedState?.status == .set, let stateValue = regularSharedState?.value {
+            stateEvents.append(prepareShareStateEvent(owner: stateOwner, eventName: eventName, stateContent: stateValue, stateType: AssuranceConstants.PayloadKey.SHARED_STATE_DATA))
+        }
+        
+        let xdmSharedState = runtime.getXDMSharedState(extensionName: stateOwner, event: nil, barrier: false)
+        if xdmSharedState?.status == .set, let xdmStateValue = xdmSharedState?.value {
+            stateEvents.append(prepareShareStateEvent(owner: stateOwner, eventName: eventName, stateContent: xdmStateValue, stateType: AssuranceConstants.PayloadKey.XDM_SHARED_STATE_DATA))
+        }
+        
+        return stateEvents
+    }
+    
+    private func prepareShareStateEvent(owner : String, eventName: String, stateContent: [String:Any], stateType: String) -> AssuranceEvent {
+        var payload: [String: AnyCodable] = [:]
+        payload[AssuranceConstants.ACPExtensionEventKey.NAME] = AnyCodable.init(eventName)
+        payload[AssuranceConstants.ACPExtensionEventKey.TYPE] = AnyCodable.init(EventType.hub.lowercased)
+        payload[AssuranceConstants.ACPExtensionEventKey.SOURCE] = AnyCodable.init(EventSource.sharedState.lowercased)
+        payload[AssuranceConstants.ACPExtensionEventKey.DATA] = [AssuranceConstants.EventDataKey.SHARED_STATE_OWNER: owner]
+        payload[AssuranceConstants.PayloadKey.METADATA] = [stateType:stateContent]
+        return AssuranceEvent(type: AssuranceConstants.EventType.GENERIC, payload: payload)
+    }
     
     private func startShutDownTimer() {
         let queue = DispatchQueue.init(label: "com.adobe.assurance.shutdowntimer", qos: .background)
@@ -214,7 +278,11 @@ public class Assurance: NSObject, Extension {
 
     private func shutDownAssurance() {
         shouldProcessEvents = false
+        Log.debug(label: AssuranceConstants.LOG_TAG, "Timeout - Assurance did not receive deeplink to start Assurance session. Shutting down Assurance extension")
         invalidateTimer()
+        self.assuranceSession?.clearQueueEvents()
+        Log.debug(label: AssuranceConstants.LOG_TAG, "Clearing the queued events and purging Assurance shared state")
+        clearState()
     }
 
     private func invalidateTimer() {

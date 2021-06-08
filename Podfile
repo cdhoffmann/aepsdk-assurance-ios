@@ -6,21 +6,21 @@ workspace 'AEPAssurance'
 project 'AEPAssurance.xcodeproj'
 
 target 'AEPAssurance' do
-  pod 'AEPCore', :git => 'https://github.com/PravinPK/aepsdk-core-ios.git', :branch => 'assurance'
-  pod 'AEPServices', :git => 'https://github.com/PravinPK/aepsdk-core-ios.git', :branch => 'assurance'
+  pod 'AEPCore', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
+  pod 'AEPServices', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
 end
 
 target 'UnitTests' do
-  pod 'AEPCore', :git => 'https://github.com/PravinPK/aepsdk-core-ios.git', :branch => 'assurance'
-  pod 'AEPServices', :git => 'https://github.com/PravinPK/aepsdk-core-ios.git', :branch => 'assurance'
+  pod 'AEPCore', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
+  pod 'AEPServices', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
 end
 
 target 'TestApp' do
-  pod 'AEPCore', :git => 'https://github.com/PravinPK/aepsdk-core-ios.git', :branch => 'assurance'
-  pod 'AEPServices', :git => 'https://github.com/PravinPK/aepsdk-core-ios.git', :branch => 'assurance'
-  pod 'AEPLifecycle', :git => 'https://github.com/PravinPK/aepsdk-core-ios.git', :branch => 'assurance'
-  pod 'AEPIdentity', :git => 'https://github.com/PravinPK/aepsdk-core-ios.git', :branch => 'assurance'
-  pod 'AEPSignal', :git => 'https://github.com/PravinPK/aepsdk-core-ios.git', :branch => 'assurance'
+  pod 'AEPCore', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
+  pod 'AEPServices', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
+  pod 'AEPLifecycle', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
+  pod 'AEPIdentity', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
+  pod 'AEPSignal', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
   pod 'AEPEdge'
   pod 'AEPEdgeConsent'
   pod 'AEPEdgeIdentity'

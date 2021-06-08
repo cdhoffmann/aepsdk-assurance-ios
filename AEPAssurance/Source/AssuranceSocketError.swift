@@ -22,6 +22,7 @@ enum AssuranceSocketError {
     case CONNECTION_LIMIT
     case EVENT_LIMIT
     case CLIENT_ERROR
+    case USER_CANCELLED
 
     var info: (name: String, description: String, shouldRetry : Bool) {
         switch self {
@@ -52,6 +53,9 @@ enum AssuranceSocketError {
         case .CLIENT_ERROR:
             return ("Client Disconnected",
                     "This client has been disconnected due to an unexpected error. Error Code 4400.",false)
+        case .USER_CANCELLED:
+            return ("Assurance session connection cancelled.",
+                    "User has chosen to cancel the socket connection. To start again, please open the app with an assurance deeplink url.", false)
         }
     }
 }

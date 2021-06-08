@@ -100,25 +100,7 @@ extension AssuranceSession: SocketEventListener {
     
     func webSocket(_ socket: SocketConnectable, didReceiveEvent event: AssuranceEvent) {
         Log.trace(label: AssuranceConstants.LOG_TAG, "Received event from assurance session - \(event.description)")
-        guard let controlType = event.commandType else {
-            Log.debug(label: AssuranceConstants.LOG_TAG, "A non control event is received event from assurance session. Ignoring to process event - \(event.description)")
-            return
-        }
-
-        if AssuranceConstants.CommandType.START_EVENT_FORWARDING == controlType {
-            canStartForwarding = true
-            // On reception of the startForwarding event
-            // 1. Remove the WebView UI and display the floating button
-            // 2. Share the Assurance shared state
-            // 3. Notify the client plugins on successful connection
-            pinCodeScreen?.connectionSucceeded()
-            statusUI.display()
-            statusUI.updateForSocketConnected()
-            pluginHub.notifyPluginsOnConnect()
-            outboundSource.add(data: 1)
-            return
-        }
-
+       
         // add the incoming event to inboundQueue and process them
         inboundQueue.enqueue(newElement: event)
         inboundSource.add(data: 1)
