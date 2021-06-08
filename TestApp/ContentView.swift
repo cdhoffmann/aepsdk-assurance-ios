@@ -31,7 +31,7 @@ struct ContentView: View {
                 HStack {
                     Button(action: {
                         if let url = URL(string: self.assuranceURL) {
-                            Assurance.startSession(url: url)
+                            Assurance.startSession(url)
                         }
                     }, label: {
                         Text("Connect to Assurance")

@@ -23,7 +23,7 @@ import Foundation
     ///
     /// - Parameter url: a valid AEPAssurance URL to start a session
     ///
-    static func startSession(url: URL) {
+    static func startSession(_ url: URL) {
         let urlString = url.absoluteString
 
         if !urlString.contains(AssuranceConstants.Deeplink.SESSIONID_KEY) {
