@@ -30,62 +30,33 @@ PODS:
 
 DEPENDENCIES:
   - AEPAnalytics
-  - AEPCore (from `https://github.com/adobe/aepsdk-core-ios.git`, branch `main`)
+  - AEPCore
   - AEPEdge
   - AEPEdgeConsent
   - AEPEdgeIdentity
-  - AEPIdentity (from `https://github.com/adobe/aepsdk-core-ios.git`, branch `main`)
-  - AEPLifecycle (from `https://github.com/adobe/aepsdk-core-ios.git`, branch `main`)
+  - AEPIdentity
+  - AEPLifecycle
   - AEPPlaces
-  - AEPServices (from `https://github.com/adobe/aepsdk-core-ios.git`, branch `main`)
-  - AEPSignal (from `https://github.com/adobe/aepsdk-core-ios.git`, branch `main`)
+  - AEPServices
+  - AEPSignal
   - AEPTarget
   - AEPUserProfile
 
 SPEC REPOS:
   trunk:
     - AEPAnalytics
+    - AEPCore
     - AEPEdge
     - AEPEdgeConsent
     - AEPEdgeIdentity
+    - AEPIdentity
+    - AEPLifecycle
     - AEPPlaces
     - AEPRulesEngine
+    - AEPServices
+    - AEPSignal
     - AEPTarget
     - AEPUserProfile
-
-EXTERNAL SOURCES:
-  AEPCore:
-    :branch: main
-    :git: https://github.com/adobe/aepsdk-core-ios.git
-  AEPIdentity:
-    :branch: main
-    :git: https://github.com/adobe/aepsdk-core-ios.git
-  AEPLifecycle:
-    :branch: main
-    :git: https://github.com/adobe/aepsdk-core-ios.git
-  AEPServices:
-    :branch: main
-    :git: https://github.com/adobe/aepsdk-core-ios.git
-  AEPSignal:
-    :branch: main
-    :git: https://github.com/adobe/aepsdk-core-ios.git
-
-CHECKOUT OPTIONS:
-  AEPCore:
-    :commit: 1ca8d8ed0dee38dbd8a00b08b236fad027cd3620
-    :git: https://github.com/adobe/aepsdk-core-ios.git
-  AEPIdentity:
-    :commit: 1ca8d8ed0dee38dbd8a00b08b236fad027cd3620
-    :git: https://github.com/adobe/aepsdk-core-ios.git
-  AEPLifecycle:
-    :commit: 1ca8d8ed0dee38dbd8a00b08b236fad027cd3620
-    :git: https://github.com/adobe/aepsdk-core-ios.git
-  AEPServices:
-    :commit: 1ca8d8ed0dee38dbd8a00b08b236fad027cd3620
-    :git: https://github.com/adobe/aepsdk-core-ios.git
-  AEPSignal:
-    :commit: 1ca8d8ed0dee38dbd8a00b08b236fad027cd3620
-    :git: https://github.com/adobe/aepsdk-core-ios.git
 
 SPEC CHECKSUMS:
   AEPAnalytics: 13353b3ea333be0af7cfc4845830d87d360726e2
@@ -102,6 +73,6 @@ SPEC CHECKSUMS:
   AEPTarget: 3411e002f25b5bb4b9718878f3f4aa47ded82fd7
   AEPUserProfile: d8702b2e3fc321febdc3854208db9bb1ad3b61c8
 
-PODFILE CHECKSUM: 522069daa953165efc1bf909bc7057a863169ebf
+PODFILE CHECKSUM: a7a86d3fea146881e9656bdec0ed14e785add88e
 
 COCOAPODS: 1.10.1
