@@ -91,7 +91,7 @@ extension iOSPinCodeScreen: FullscreenMessageDelegate {
             self.pinCodeCallback?(url, nil)
         }
 
-        return false
+        return true
     }
     ///
     /// Invoked when the FullscreenMessage failed to be displayed

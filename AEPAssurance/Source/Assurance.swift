@@ -231,7 +231,6 @@ public class Assurance: NSObject, Extension {
     }
 
     
-    
     // MARK:- Private methods
     
     private func getFriendlyExtensionName(extensionMap: [String: Any], extensionName: String) -> String {
