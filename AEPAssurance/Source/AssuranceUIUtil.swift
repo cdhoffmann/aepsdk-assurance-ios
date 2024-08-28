@@ -26,8 +26,11 @@ class AssuranceUIUtil {
                 callback(nil)
                 return
             }
-
+            #if os(iOS)
             let scale = UIScreen.main.scale
+            #elseif os(visionOS)
+            let scale: CGFloat = 1
+            #endif
             UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, scale)
             guard let context = UIGraphicsGetCurrentContext() else {
                 callback(nil)
@@ -44,6 +47,10 @@ class AssuranceUIUtil {
 
 internal extension UIApplication {
     func assuranceGetKeyWindow() -> UIWindow? {
+        #if os(iOS)
         keyWindow ?? windows.first
+        #elseif os(visionOS)
+        UIApplication.shared.connectedScenes.compactMap { ($0 as? UIWindowScene)?.keyWindow }.last
+        #endif
     }
 }

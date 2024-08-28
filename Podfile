@@ -8,23 +8,23 @@ project 'AEPAssurance.xcodeproj'
 pod 'SwiftLint', '0.52.0'
 
 target 'AEPAssurance' do
-  pod 'AEPCore'
-  pod 'AEPServices'
-  pod 'AEPRulesEngine'
+  pod 'AEPCore', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
+  pod 'AEPServices', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
+  pod 'AEPRulesEngine', :path => '~/code/MobileSDK/Forks/aepsdk-rulesengine-ios/'
 end
 
 target 'UnitTests' do
-  pod 'AEPCore'
-  pod 'AEPServices'
-  pod 'AEPRulesEngine'
+  pod 'AEPCore', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
+  pod 'AEPServices', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
+  pod 'AEPRulesEngine', :path => '~/code/MobileSDK/Forks/aepsdk-rulesengine-ios/'
 end
 
 target 'TestApp' do
-  pod 'AEPCore'
-  pod 'AEPServices'
-  pod 'AEPLifecycle'
-  pod 'AEPIdentity'
-  pod 'AEPSignal'
+  pod 'AEPCore', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
+  pod 'AEPServices', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
+  pod 'AEPLifecycle', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
+  pod 'AEPIdentity', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
+  pod 'AEPSignal', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
   pod 'AEPEdge'
   pod 'AEPEdgeConsent', :git => 'https://github.com/adobe/aepsdk-edgeconsent-ios.git', :branch => 'staging'
   pod 'AEPEdgeIdentity'
@@ -36,11 +36,11 @@ target 'TestApp' do
 end
 
 target 'TestAppObjC' do
-  pod 'AEPCore'
-  pod 'AEPServices'
-  pod 'AEPLifecycle'
-  pod 'AEPIdentity'
-  pod 'AEPSignal'
+  pod 'AEPCore', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
+  pod 'AEPServices', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
+  pod 'AEPLifecycle', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
+  pod 'AEPIdentity', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
+  pod 'AEPSignal', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
   pod 'AEPEdge'
   pod 'AEPEdgeConsent', :git => 'https://github.com/adobe/aepsdk-edgeconsent-ios.git', :branch => 'staging'
   pod 'AEPEdgeIdentity'
@@ -48,4 +48,24 @@ target 'TestAppObjC' do
   pod 'AEPTarget', :git => 'https://github.com/adobe/aepsdk-target-ios.git', :branch => 'staging'
   pod 'AEPAnalytics'
   pod 'AEPPlaces', :git => 'https://github.com/adobe/aepsdk-places-ios.git', :branch => 'staging'
+end
+
+target 'TestAppVisionPro' do
+  pod 'AEPCore', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
+  pod 'AEPServices', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
+  pod 'AEPLifecycle', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
+  pod 'AEPIdentity', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
+  pod 'AEPSignal', :path => '~/code/MobileSDK/Forks/aepsdk-core-ios/'
+  pod 'AEPEdge'
+  pod 'AEPEdgeIdentity'
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      # Activate VisionOS support for all Pods
+      config.build_settings['SUPPORTED_PLATFORMS'] = 'iphoneos iphonesimulator xros xrsimulator' # Includes VisionOS (xros) and its simulator (xrsimulator)
+      config.build_settings['TARGETED_DEVICE_FAMILY'] = '1,2,7' # Incorporate device family '7' for VisionOS
+    end
+  end
 end
